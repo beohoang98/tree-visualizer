@@ -1,0 +1,9 @@
+{
+    "plugins": ["prettier", "import"],
+    "root": true,
+    "extends": ["react-app"],
+    "rules": {
+        "prettier/prettier": "warn",
+        "import/order": "warn"
+    }
+}
