@@ -1,39 +1,28 @@
 body {
-  margin: 0;
+    margin: 0;
 }
 
 .app-container {
-  display: flex;
-  flex-direction: row;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .app-svg {
-  flex: 1 1 auto;
-  overflow: auto;
-  background-color: #ccc;
+    flex: 1 1 auto;
+    overflow: auto;
+    background: #ddd;
+    background: linear-gradient(90deg, #bbb 0%, #fff 40%, #fff 60%, #bbb 100%);
 }
-.app-input {
-  flex: 0 0 auto;
-  min-width: 200px;
-  padding: 1em;
+.app-svg::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
-.app-svg circle {
-  fill: #22c;
-}
-.app-svg text {
-  fill: #ccc;
-  font-weight: 900;
-  font-size: 20px;
-  font-family: monospace;
-}
-.app-svg path {
-  stroke: #55c;
-  stroke-width: 2px;
-}
-.app-svg g, .app-svg path {
-  transition: 0.2s;
+.app-input {
+    flex: 0 0 auto;
+    min-width: 200px;
+    padding: 1em;
 }

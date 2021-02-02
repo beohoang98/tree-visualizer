@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { BinaryTree } from "../../core/tree";
 import { TreeNodeElement } from "../Node";
-
+import "./tree.scss";
 export interface TreeProps {
     tree: BinaryTree<number>;
     x: number;

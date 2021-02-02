@@ -12,10 +12,36 @@ A React.js web application to visualizer tree-structure value like Binary Tree, 
 
 - Coding "workout" - to remain knowledge while being jobless.
 
-## Using
+## Checklist
 
-- [React.js](https://reactjs.org) and [React RxJS](https://react-rxjs.org)
+- Tree implementations
 
-- Own tree implementations
+    - [X] Simple binary search tree
 
-- [Create React App](https://create-react-app.dev)'s template
+    - [ ] AVL Tree
+
+    - [ ] BTree
+
+    - [ ] Red-black Tree
+
+- Visualize tree by SVG
+
+    - [X] Render tree recursively
+
+    - [X] Simple animation
+
+    - [ ] Calculate height to adjust node's position after add node
+
+    - [ ] Re calculate height to adjust node's position after remove node
+
+- Performance
+
+> Not thought out yet
+
+- Other stuff
+
+    - [ ] Download SVG
+
+    - [ ] Download in other file type
+
+    - > Not thought out yet

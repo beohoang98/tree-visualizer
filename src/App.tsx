@@ -1,53 +1,58 @@
-import "./App.css";
-
 import React, { useCallback, useState } from "react";
-
+import "./App.css";
+import { Control } from "./components/Control";
 import { TreeElement } from "./components/Tree";
+import { ZoomWrapper } from "./containers/Zoom";
 import { BinaryTree } from "./core/tree";
 
 function App() {
-    const [newElement, setNewElement] = useState<number>();
-    const [elements, setElements] = useState<number[]>([]);
     const [tree, setTree] = useState(new BinaryTree());
 
     const addElement = useCallback(
-        (ev: React.FormEvent) => {
-            ev.preventDefault();
-            if (newElement && !isNaN(newElement)) {
-                setElements([...elements, newElement]);
-                tree.insert(newElement);
-                setTree(tree);
-            }
+        (value: number) => {
+            console.debug("Add " + value);
+            tree.insert(value);
+            setTree(
+                Object.assign(Object.create(Object.getPrototypeOf(tree)), tree)
+            );
         },
-        [elements, setElements, newElement, tree]
+        [tree]
+    );
+    const removeElement = useCallback(
+        (value: number) => {
+            console.debug("Remove " + value);
+            tree.delete(value);
+            setTree(
+                Object.assign(Object.create(Object.getPrototypeOf(tree)), tree)
+            );
+        },
+        [tree]
     );
 
     return (
         <div className="app-container">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="app-svg"
-                viewBox="0 0 800 800"
-            >
-                <TreeElement tree={tree} x={400} y={100} />
-            </svg>
-            <div className="app-input">
-                <div className="app-input-control">
-                    <form onSubmit={addElement}>
-                        <input
-                            type="number"
-                            value={newElement}
-                            onChange={(ev) => setNewElement(+ev.target.value)}
-                        />
-                        <button type="submit">Add</button>
-                    </form>
-                </div>
-                <ul>
-                    {elements.map((el) => (
-                        <li>{el}</li>
-                    ))}
-                </ul>
+            <div className="app-svg">
+                <ZoomWrapper width={800} height={800}>
+                    <defs>
+                        <linearGradient
+                            id="path-gradient"
+                            x1="0%"
+                            y1="0%"
+                            x2="0%"
+                            y2="100%"
+                        >
+                            <stop offset="0%" stop-color="#22c" />
+                            <stop offset="50%" stop-color="#3cf" />
+                            <stop offset="100%" stop-color="#22c" />
+                        </linearGradient>
+                    </defs>
+                    <TreeElement tree={tree} x={400} y={100} />
+                </ZoomWrapper>
             </div>
+            <Control
+                onAddElement={addElement}
+                onRemoveElement={removeElement}
+            />
         </div>
     );
 }

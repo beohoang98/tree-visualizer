@@ -1,0 +1,55 @@
+$node-color: #fdc35c;
+
+.app-svg {
+    circle {
+        fill: $node-color;
+        animation: _tree_node_appear 0.2s ease-in-out both;
+        &.pointer {
+            fill: #333;
+        }
+    }
+
+    text {
+        fill: #333;
+        font-weight: 900;
+        font-size: 20px;
+        font-family: monospace;
+        stroke: $node-color;
+        stroke-width: 8px;
+        stroke-linejoin: round;
+        paint-order: stroke;
+    }
+
+    path {
+        stroke: #35f;
+        stroke: url(#path-gradient);
+        stroke-width: 4px;
+        fill: none;
+    }
+
+    g.node {
+        cursor: pointer;
+        &:hover {
+            circle {
+                stroke: darken($node-color, 10%);
+                stroke-width: 4px;
+            }
+        }
+    }
+
+    g,
+    path {
+        transition: 0.2s;
+    }
+}
+
+@keyframes _tree_node_appear {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

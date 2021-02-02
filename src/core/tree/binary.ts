@@ -1,9 +1,11 @@
 import { TreeNode } from "./node";
 
 export class BinaryTree<T = number> {
+    serializeID: number = 0;
     root: TreeNode<T> | undefined = undefined;
 
     insert(value: T): void {
+        ++this.serializeID;
         if (!this.root) {
             this.root = new TreeNode(value);
             return;
@@ -56,7 +58,7 @@ export class BinaryTree<T = number> {
     private getMinRight(node: TreeNode<T>): (TreeNode<T> | undefined)[] {
         let parent = node;
         let min = node.right;
-        while (min && !min.left) {
+        while (min && min.left) {
             parent = min;
             min = min.left;
         }
@@ -65,6 +67,7 @@ export class BinaryTree<T = number> {
 
     delete(value: T): TreeNode<T> | undefined {
         if (!this.root) return undefined;
+        // debugger;
 
         let traversalNode: TreeNode<T> | undefined = this.root;
         let parent: TreeNode<T> = this.root;
@@ -75,47 +78,64 @@ export class BinaryTree<T = number> {
             if (value < traversalNode.value) {
                 isLeft = true;
                 traversalNode = traversalNode.left;
-            } else {
+            } else if (value > traversalNode.value) {
                 isLeft = false;
                 traversalNode = traversalNode.right;
             }
         }
         if (!traversalNode) return undefined;
 
+        ++this.serializeID;
+
         if (!traversalNode.left && !traversalNode.right) {
-            if (traversalNode === this.root) this.root = undefined;
+            if (traversalNode === this.root) {
+                this.root = undefined;
+                return traversalNode;
+            }
             if (isLeft) parent.left = undefined;
             else parent.right = undefined;
-            return;
+            return traversalNode;
         }
 
         if (!traversalNode.left) {
-            if (traversalNode === this.root) this.root = traversalNode.right;
+            if (traversalNode === this.root) {
+                this.root = traversalNode.right;
+                return traversalNode;
+            }
             if (isLeft) parent.left = traversalNode.right;
-            else parent.right = traversalNode.left;
-            return;
+            else parent.right = traversalNode.right;
+            return traversalNode;
         }
 
         if (!traversalNode.right) {
-            if (traversalNode === this.root) this.root = traversalNode.right;
-            if (isLeft) parent.left = traversalNode.right;
+            if (traversalNode === this.root) {
+                this.root = traversalNode.left;
+                return traversalNode;
+            }
+            if (isLeft) parent.left = traversalNode.left;
             else parent.right = traversalNode.left;
-            return;
+            return traversalNode;
         }
 
+        // debugger;
         const [minRight, parentMinRight] = this.getMinRight(traversalNode);
         if (!minRight || !parentMinRight) return;
-        parentMinRight.right = minRight.right;
+
+        if (parentMinRight === traversalNode)
+            parentMinRight.right = minRight.right;
+        else parentMinRight.left = minRight.right;
 
         minRight.left = traversalNode.left;
         minRight.right = traversalNode.right;
 
         if (traversalNode === this.root) {
             this.root = minRight;
-            return;
+            return traversalNode;
         }
 
         if (isLeft) parent.left = minRight;
         else parent.right = minRight;
+
+        return traversalNode;
     }
 }

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { TreeNodeProps } from "./props";
 
 const RADIUS = 20;
@@ -14,17 +14,18 @@ export const TreeNodeElement: FC<TreeNodeProps> = ({
     const [heights, setHeights] = useState([0, 0]);
     const heightCallback = useCallback(
         (index: number) => (h: number[]) => {
-            const max = Math.max(...h);
-            if (max + 1 <= heights[index]) return;
-            heights[index] = max + 1;
+            if (h[1 - index] + 1 <= heights[index]) return;
+            heights[index] = h[1 - index] + 1;
             setHeights(heights.slice());
         },
         [heights]
     );
 
     useEffect(() => {
-        if (node) onHeightCalculated(heights);
-    }, [onHeightCalculated, node, heights]);
+        if (node) {
+            onHeightCalculated([node.left ? 1 : 0, node.right ? 1 : 0]);
+        }
+    }, [onHeightCalculated, node]);
 
     if (!node) return null;
 
@@ -32,16 +33,27 @@ export const TreeNodeElement: FC<TreeNodeProps> = ({
     const distanceRight = DISTANCE * Math.pow(2, heights[1]);
 
     const pathLeft = node.left ? (
-        <path d={`M0,0 l${-distanceLeft},${HEIGHT}`} stroke="black" />
+        <path
+            d={`M0,0 q0,${HEIGHT / 2},${-distanceLeft / 2},${HEIGHT / 2} t${
+                -distanceLeft / 2
+            },${HEIGHT / 2}`}
+            stroke="black"
+        />
     ) : null;
     const pathRight = node.right ? (
-        <path d={`M0,0 l${distanceRight},${HEIGHT}`} stroke="black" />
+        <path
+            d={`M0,0 q0,${HEIGHT / 2},${distanceRight / 2},${HEIGHT / 2} t${
+                distanceRight / 2
+            },${HEIGHT / 2}`}
+            stroke="black"
+        />
     ) : null;
 
     return (
         <g transform={`translate(${x}, ${y})`} data-height={heights}>
             {pathLeft}
             <TreeNodeElement
+                key={node.left?.value}
                 node={node.left}
                 x={-distanceLeft}
                 y={HEIGHT}
@@ -49,15 +61,18 @@ export const TreeNodeElement: FC<TreeNodeProps> = ({
             />
             {pathRight}
             <TreeNodeElement
+                key={node.right?.value}
                 node={node.right}
                 x={distanceRight}
                 y={HEIGHT}
                 onHeightCalculated={heightCallback(1)}
             />
-            <circle cx="0" cy="0" r={RADIUS} />
-            <text x="0" y="0" textAnchor="middle" dominantBaseline="middle">
-                {node.value}
-            </text>
+            <g className="node">
+                <circle cx="0" cy="0" r={RADIUS} />
+                <text x="0" y="0" textAnchor="middle" dominantBaseline="middle">
+                    {node.value}
+                </text>
+            </g>
         </g>
     );
 };
